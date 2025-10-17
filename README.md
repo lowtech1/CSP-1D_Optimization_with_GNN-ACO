@@ -39,15 +39,16 @@ Sau khi tìm được kế hoạch cắt tối ưu cho một đơn hàng, các m
 📁 Cấu trúc Thư mục và Tệp
 Để dự án hoạt động, bạn cần có các tệp sau trong cùng một thư mục:
 
-/your_project_folder  
-  |  
-  |-- model.GNN-ACO.py           # File mã nguồn chính của chương trình
-  |-- don_hang.csv               # INPUT: File chứa thông tin đơn hàng cần xử lý
-  |  
-  |-- gnn_model.pt               # OUTPUT: File lưu trọng số của mô hình GNN đã huấn luyện
-  |-- du_lieu_cat.csv            # OUTPUT & INPUT: Kho dữ liệu các mẫu cắt hiệu quả
-  |-- cutting.log                # OUTPUT: File ghi lại nhật ký hoạt động của chương trình
-1. File Đầu vào (don_hang.csv)  
+/your_project_folder    
+  |    
+  |-- model.GNN-ACO.py               # File mã nguồn chính của chương trình    
+  |-- don_hang.csv                   # INPUT: File chứa thông tin đơn hàng cần xử lý    
+  |     
+  |-- gnn_model.pt                   # OUTPUT: File lưu trọng số của mô hình GNN đã huấn luyện    
+  |-- du_lieu_cat.csv                # OUTPUT & INPUT: Kho dữ liệu các mẫu cắt hiệu quả    
+  |-- cutting.log                    # OUTPUT: File ghi lại nhật ký hoạt động của chương trình    
+  
+File Đầu vào (don_hang.csv)  
 Đây là file CSV chứa danh sách các sản phẩm cần cắt. File phải có 3 cột: ten_san_pham, chieu_dai, so_luong.  
 
 Ví dụ:   
@@ -55,7 +56,8 @@ Ví dụ:
   SP-A,23.5,50  
   SP-B,17.0,80  
   SP-C,42.1,35  
-2. File Đầu ra / Dữ liệu học  
+  
+File Đầu ra / Dữ liệu học  
 gnn_model.pt: Trọng số của mô hình GNN sẽ được tự động lưu vào file này sau lần huấn luyện đầu tiên. Ở những lần chạy sau, chương trình sẽ tải mô hình từ file này thay vì huấn luyện lại (trừ khi file bị xóa).
 
 du_lieu_cat.csv: Chứa các mẫu cắt tốt nhất được tìm thấy. Dữ liệu trong file này được dùng để huấn luyện GNN.
@@ -82,9 +84,8 @@ PyTorch Geometric Installation
 Sau đó, cài đặt các thư viện còn lại:  
 
 Bash
-
   pip install pandas numpy tqdm  
-or   
+  or   
   pip install requirement.txt  
 
 --------------------------------------------------------------------------------------------------------------------------------
