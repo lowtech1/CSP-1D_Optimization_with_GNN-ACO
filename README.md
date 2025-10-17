@@ -83,7 +83,9 @@ Sau đó, cài đặt các thư viện còn lại:
 
 Bash
 
-pip install pandas numpy tqdm
+  pip install pandas numpy tqdm
+or 
+  pip install requirement.txt
 
 --------------------------------------------------------------------------------------------------------------------------------
 
