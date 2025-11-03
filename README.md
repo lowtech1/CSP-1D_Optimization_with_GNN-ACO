@@ -1,146 +1,159 @@
-🤖 Tối Ưu Hóa Cắt Thép 1D Sử Dụng Mạng Nơ-ron Đồ Thị (GNN) và Tối ưu hóa Bầy kiến (ACO)
-Dự án này triển khai một phương pháp lai ghép tiên tiến để giải quyết Bài toán Cắt Thép một chiều (1D Cutting Stock Problem). 
-Mục tiêu là tìm ra kế hoạch cắt các thanh thép có chiều dài tiêu 
-chuẩn thành các sản phẩm theo yêu cầu sao cho tổng lượng vật liệu lãng phí là ít nhất.
+# 🤖 Tối Ưu Hóa Cắt Thép 1D Sử Dụng Mạng Nơ-ron Đồ Thị (GNN) và Thuật Toán Bầy Kiến (ACO)
 
-Điểm đặc biệt của dự án là sự kết hợp giữa Mạng Nơ-ron Đồ thị (GNN) để học các mối quan hệ phức tạp giữa các sản phẩm và thuật toán Tối ưu hóa Bầy kiến (ACO) để tìm kiếm giải pháp tối ưu.
+## 🧠 Giới thiệu
+Dự án này triển khai một **phương pháp lai ghép tiên tiến (Hybrid Approach)** để giải quyết **Bài toán Cắt Thép Một Chiều (1D Cutting Stock Problem)**.  
+Mục tiêu là tìm ra **kế hoạch cắt các thanh thép tiêu chuẩn** thành sản phẩm theo yêu cầu **với lượng vật liệu lãng phí tối thiểu**.
 
---------------------------------------------------------------------------------------------------------------------------------
+Điểm đặc biệt của dự án là sự kết hợp giữa:
+- 🧩 **Mạng Nơ-ron Đồ Thị (Graph Neural Network – GNN)**: học mối quan hệ phức tạp giữa các sản phẩm.  
+- 🐜 **Thuật toán Tối ưu hóa Bầy Kiến (Ant Colony Optimization – ACO)**: tìm kiếm giải pháp tối ưu toàn cục dựa trên pheromone và heuristic.
 
-🚀 Cách Hoạt Động
-Hệ thống hoạt động theo một cơ chế lai ghép thông minh:
+---
 
-Học hỏi từ Dữ liệu (GNN):
+## 🚀 Cơ Chế Hoạt Động
 
-Một Mạng Nơ-ron Đồ thị (cụ thể là GATConv) được huấn luyện dựa trên các mẫu cắt hiệu quả trong quá khứ (lưu trong du_lieu_cat.csv) hoặc từ dữ liệu được tạo ngẫu nhiên.
+### 🧠 1. Học từ dữ liệu (GNN)
+- Sử dụng **Graph Attention Network (GATConv)** huấn luyện từ các mẫu cắt hiệu quả (trong `du_lieu_cat.csv`) hoặc dữ liệu ngẫu nhiên.
+- GNN sinh ra **ma trận gợi ý (heuristic matrix)** biểu diễn xác suất hai sản phẩm nên được cắt cùng nhau.
 
-Mục tiêu của GNN là học và tạo ra một "ma trận gợi ý" (heuristic matrix). Ma trận này biểu thị xác suất hai sản phẩm bất kỳ nên được cắt cùng nhau trên một thanh thép.
+### 🐜 2. Tối ưu hóa tìm kiếm (ACO)
+- Thuật toán **Ant Colony Optimization (ACO)** xây dựng các mẫu cắt hoàn chỉnh.
+- Mỗi "con kiến" chọn sản phẩm dựa trên:
+  - **Mùi pheromone**: dấu vết của các phương án cắt thành công trước đó.
+  - **Gợi ý từ GNN**: ma trận heuristic giúp định hướng thông minh hơn.
+- Sau nhiều thế hệ, ACO hội tụ về **phương án có độ lãng phí thấp nhất**.
 
-Tìm kiếm Tối ưu (ACO):
+### 🔁 3. Tự cải tiến
+- Các mẫu cắt hiệu quả được lưu lại trong `du_lieu_cat.csv` → mô hình GNN ngày càng thông minh hơn ở những lần chạy sau.
 
-Thuật toán Tối ưu hóa Bầy kiến (ACO) được sử dụng để xây dựng các kế hoạch cắt hoàn chỉnh.
+---
 
-Các "con kiến" trong thuật toán sẽ lựa chọn các sản phẩm để đưa vào một mẫu cắt. Quyết định của chúng được dẫn dắt bởi hai yếu tố:
+## 📁 Cấu Trúc Thư Mục Dự Án
 
-Mùi Pheromone: Dấu vết do các "con kiến" thành công ở các thế hệ trước để lại, cho biết những cặp sản phẩm nào đã từng tạo ra kết quả tốt.
+```bash
+/your_project_folder
+│
+├── model.GNN-ACO.py          # 🧩 Mã nguồn chính: thực hiện huấn luyện GNN và tối ưu ACO
+├── don_hang.csv              # 📥 INPUT: Danh sách sản phẩm cần cắt
+│
+├── gnn_model.pt              # 💾 OUTPUT: Trọng số mô hình GNN đã huấn luyện
+├── du_lieu_cat.csv           # 📚 Dữ liệu các mẫu cắt hiệu quả (vừa là đầu vào, vừa là kết quả)
+├── cutting.log               # 🪶 Nhật ký chạy chương trình (log file)
+│
+├── requirements.txt          # 📦 Danh sách thư viện cần thiết
+└── README.md                 # 📖 File mô tả dự án
 
-Gợi ý từ GNN: Ma trận heuristic do GNN cung cấp, giúp các con kiến đưa ra những lựa chọn thông minh hơn ngay từ đầu.
+```
+# ⚙️ Hướng Dẫn Sử Dụng & Cấu Hình Dự Án GNN–ACO Cutting Optimization
 
-Qua nhiều thế hệ, thuật toán sẽ hội tụ về giải pháp có độ lãng phí thấp nhất.
+## 📊 1. Dữ Liệu Đầu Vào & Đầu Ra
 
-Tự Cải tiến:
+### 🗂️ File **don_hang.csv**
+Chứa thông tin đơn hàng cần cắt, gồm các cột:
+- **ten_san_pham**: Tên sản phẩm
+- **chieu_dai**: Chiều dài mỗi sản phẩm (đơn vị cùng với thanh thép)
+- **so_luong**: Số lượng cần cắt
 
-Sau khi tìm được kế hoạch cắt tối ưu cho một đơn hàng, các mẫu cắt hiệu quả trong kế hoạch đó sẽ được lưu lại vào tệp du_lieu_cat.csv.
+**Ví dụ:**
+```csv
+ten_san_pham,chieu_dai,so_luong
+SP-A,23.5,50
+SP-B,17.0,80
+SP-C,42.1,35
 
-Điều này giúp mô hình GNN ngày càng "thông minh" hơn trong những lần chạy tiếp theo, vì nó được học từ chính những kết quả tốt nhất mà nó đã tìm ra.
+```
+## 🛠️ Cài Đặt Môi Trường  
+---
 
---------------------------------------------------------------------------------------------------------------------------------
+### 1️⃣ Yêu cầu hệ thống / System Requirements  
+**🇻🇳**  
+- Python >= 3.8  
+- pip >= 21.0  
+- (Tùy chọn) GPU hỗ trợ CUDA nếu bạn muốn huấn luyện nhanh hơn  
 
-📁 Cấu trúc Thư mục và Tệp
-Để dự án hoạt động, bạn cần có các tệp sau trong cùng một thư mục:
+---
 
-/your_project_folder    
-  |    
-  |-- model.GNN-ACO.py               # File mã nguồn chính của chương trình    
-  |-- don_hang.csv                   # INPUT: File chứa thông tin đơn hàng cần xử lý    
-  |     
-  |-- gnn_model.pt                   # OUTPUT: File lưu trọng số của mô hình GNN đã huấn luyện    
-  |-- du_lieu_cat.csv                # OUTPUT & INPUT: Kho dữ liệu các mẫu cắt hiệu quả    
-  |-- cutting.log                    # OUTPUT: File ghi lại nhật ký hoạt động của chương trình    
-  
-File Đầu vào (don_hang.csv)  
-Đây là file CSV chứa danh sách các sản phẩm cần cắt. File phải có 3 cột: ten_san_pham, chieu_dai, so_luong.  
+### 2️⃣ Tạo môi trường ảo / Create a virtual environment  
+**🇻🇳** (Khuyến khích để tránh xung đột thư viện)  
+**🇬🇧** (Recommended to prevent library conflicts)  
 
-Ví dụ:   
-  ten_san_pham,chieu_dai,so_luong  
-  SP-A,23.5,50  
-  SP-B,17.0,80  
-  SP-C,42.1,35  
-  
-File Đầu ra / Dữ liệu học  
-gnn_model.pt: Trọng số của mô hình GNN sẽ được tự động lưu vào file này sau lần huấn luyện đầu tiên. Ở những lần chạy sau, chương trình sẽ tải mô hình từ file này thay vì huấn luyện lại (trừ khi file bị xóa).
+```bash
+python -m venv venv
+```
+# 🐧 Linux / macOS
+```bash
+source venv/bin/activate
+```
+# 🪟 Windows
+```bash
+venv\Scripts\activate
+```
+## 📜 Luồng Hoạt Động Của Chương Trình  
 
-du_lieu_cat.csv: Chứa các mẫu cắt tốt nhất được tìm thấy. Dữ liệu trong file này được dùng để huấn luyện GNN.
+Dưới đây là quy trình hoạt động tổng thể của hệ thống **GNN + ACO** trong việc tối ưu hóa cắt thép 1D:
 
-cutting.log: Ghi lại các thông tin, cảnh báo hoặc lỗi xảy ra trong quá trình thực thi.
+---
 
---------------------------------------------------------------------------------------------------------------------------------
+### 🔁 Quy trình tổng quát:
 
-🛠️ Cài đặt Môi trường
-Để chạy dự án, bạn cần cài đặt các thư viện Python cần thiết.
+1️⃣ **Đọc dữ liệu đầu vào**  
+   - Đọc file **`don_hang.csv`** chứa danh sách sản phẩm, chiều dài, và số lượng cần cắt.  
 
-Tạo một môi trường ảo (khuyến khích):
+---
 
-Bash
+2️⃣ **Kiểm tra sự tồn tại của mô hình GNN** (`gnn_model.pt`)  
+   - 🔍 **Nếu có:**  
+     → Tải mô hình GNN đã được huấn luyện trước đó.  
+   - ⚙️ **Nếu không có:**  
+     → Tạo dữ liệu huấn luyện (từ `du_lieu_cat.csv` hoặc dữ liệu ngẫu nhiên).  
+     → Huấn luyện mô hình GNN mới và lưu lại vào **`gnn_model.pt`**.  
 
-python -m venv venv  
-source venv/bin/activate  # Trên Windows: venv\Scripts\activate  
-Cài đặt các thư viện: Dự án yêu cầu các thư viện PyTorch và PyTorch Geometric. Hãy cài đặt chúng trước theo hướng dẫn trên trang chủ của chúng để đảm bảo tương thích với hệ thống của bạn.
+---
 
-PyTorch Installation  
+3️⃣ **Sinh ma trận heuristic (gợi ý cắt)**  
+   - Mô hình **GNN** học từ dữ liệu các mẫu cắt hiệu quả để sinh ra **ma trận heuristic**,  
+     biểu thị khả năng hai sản phẩm nên được cắt cùng nhau.  
 
-PyTorch Geometric Installation  
+---
 
-Sau đó, cài đặt các thư viện còn lại:  
+4️⃣ **Thuật toán Tối ưu hóa Bầy kiến (ACO)**  
+   Sử dụng hai nguồn thông tin để xây dựng mẫu cắt tối ưu:  
+   - 🐜 **Pheromone (vết mùi):** Dấu vết của các lời giải tốt trước đó.  
+   - 🧭 **Heuristic từ GNN:** Gợi ý thông minh giúp hướng dẫn quá trình tìm kiếm.  
 
-Bash
-  pip install pandas numpy tqdm  
-  or   
-  pip install requirement.txt  
+---
 
---------------------------------------------------------------------------------------------------------------------------------
+5️⃣ **Tìm kiếm kế hoạch cắt tối ưu**  
+   - Các "con kiến" trong thuật toán sẽ dần dần xây dựng các **mẫu cắt** khả thi.  
+   - Sau nhiều thế hệ lặp lại, thuật toán hội tụ và tìm ra kế hoạch cắt có **lượng lãng phí thấp nhất**.  
 
-⚙️ Cách Sử dụng
-Chuẩn bị file don_hang.csv: Đảm bảo file này tồn tại trong cùng thư mục và có đúng định dạng như đã mô tả.
+---
 
-Chạy chương trình: Mở terminal hoặc command prompt, điều hướng đến thư mục dự án và chạy lệnh:
+6️⃣ **In báo cáo tổng hợp kết quả**  
+   - 🧾 Hiển thị các thông tin chính:
+     - Hiệu suất sử dụng vật liệu.  
+     - Tổng lượng thép lãng phí.  
+     - Danh sách chi tiết các mẫu cắt tối ưu.  
+   - Ghi lại toàn bộ log hoạt động vào **`cutting.log`**.  
 
-Bash
+---
 
-python model.GNN-ACO.py
-Xem kết quả:
+7️⃣ **Cập nhật dữ liệu học cho GNN**  
+   - Lưu lại các mẫu cắt tốt nhất vào file **`du_lieu_cat.csv`**.  
+   - Lần chạy sau, GNN sẽ học từ dữ liệu này để **cải thiện độ chính xác** và **rút ngắn thời gian tìm kiếm**.  
 
-Lần chạy đầu tiên: Chương trình sẽ mất một chút thời gian để huấn luyện mô hình GNN.
+---
 
-Các lần chạy sau: Chương trình sẽ tải mô hình đã được huấn luyện và chạy nhanh hơn.
+### 🔄 Sơ đồ tóm tắt quy trình
 
-Kết quả chi tiết về kế hoạch cắt, hiệu suất, và sản lượng sẽ được in ra màn hình một cách trực quan.
-
---------------------------------------------------------------------------------------------------------------------------------
-
-📜 Luồng Hoạt động của Chương trình
-Khi bạn chạy file model.GNN-ACO.py, nó sẽ thực hiện các bước sau:
-
-Đọc Đơn hàng: Tải dữ liệu từ don_hang.csv.
-
-Chuẩn bị GNN:
-
-Kiểm tra xem file gnn_model.pt có tồn tại không.
-
-Nếu có: Tải trọng số mô hình đã được huấn luyện.
-
-Nếu không:
-
-Tạo dữ liệu huấn luyện từ du_lieu_cat.csv (nếu có) và bổ sung bằng các mẫu ngẫu nhiên.
-
-Huấn luyện mô hình GNN từ đầu.
-
-Lưu mô hình đã huấn luyện vào gnn_model.pt.
-
-Khởi tạo Solver GNN-ACO:
-
-Sử dụng GNN để tính toán ma trận heuristic.
-
-Khởi tạo các tham số cho thuật toán ACO (số lượng kiến, tốc độ bay hơi, v.v.).
-
-Giải bài toán: Chạy thuật toán ACO qua nhiều thế hệ để tìm ra kế hoạch cắt tốt nhất.
-
-In Báo cáo: Hiển thị kết quả chi tiết ra màn hình, bao gồm:
-
-Bảng tóm tắt tổng quan (tổng lãng phí, hiệu suất).
-
-Bảng chi tiết các mẫu cắt và số lần lặp lại.
-
-Bảng so sánh sản lượng yêu cầu và sản lượng thực tế.
-
-Cập nhật Kho dữ liệu: Lưu các mẫu cắt tối ưu vừa tìm được vào du_lieu_cat.csv để cải thiện mô hình cho các lần chạy trong tương lai.
+```mermaid
+flowchart TD
+A[1️⃣ Đọc don_hang.csv] --> B[2️⃣ Kiểm tra gnn_model.pt]
+B -->|Có| C[Tải mô hình GNN]
+B -->|Không| D[Huấn luyện GNN mới]
+C & D --> E[3️⃣ Sinh ma trận heuristic]
+E --> F[4️⃣ Chạy thuật toán ACO]
+F --> G[5️⃣ Tìm kế hoạch cắt tối ưu]
+G --> H[6️⃣ In báo cáo & ghi log]
+H --> I[7️⃣ Lưu mẫu cắt vào du_lieu_cat.csv]
+I --> J[Hoàn thành quy trình]
